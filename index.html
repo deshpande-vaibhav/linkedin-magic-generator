@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Comment Magic | AI-Powered Engagement</title>
+    <meta name="description" content="Generate high-quality, professional, and engaging LinkedIn comments in seconds using Mistral AI.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LinkedIn Comment Magic</h1>
+            <p class="subtitle">AI-powered engagement tailored to your style</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-target="comment-generator">Magic Comment Generator</button>
+            <button class="tab-btn" data-target="caption-generator">Magic Caption Generator</button>
+        </nav>
+
+        <main>
+            <!-- Comment Generator Section -->
+            <section id="comment-generator" class="generator-section active">
+                <div class="input-group">
+                    <label for="post_caption">Post Caption</label>
+                    <textarea id="post_caption" placeholder="Paste the LinkedIn post caption here..."></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label for="post_link">Post Link (Optional)</label>
+                        <input type="url" id="post_link" placeholder="https://linkedin.com/posts/...">
+                    </div>
+                    <div class="input-group">
+                        <label for="profile_link_comment">User Profile Link (Optional)</label>
+                        <input type="url" id="profile_link_comment" placeholder="https://linkedin.com/in/...">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label for="tone">Comment Tone</label>
+                        <select id="tone">
+                            <option value="Supportive">Supportive</option>
+                            <option value="Professional">Professional</option>
+                            <option value="Funny">Funny</option>
+                            <option value="Thoughtful">Thoughtful</option>
+                            <option value="Curious">Curious</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="model_comment">AI Model</label>
+                        <select id="model_comment">
+                            <option value="mistral-large-latest">Mistral Large (Smartest)</option>
+                            <option value="mistral-small-latest">Mistral Small (Fastest)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn generate-btn" id="generate-comment-btn">Generate Magic Comment</button>
+            </section>
+
+            <!-- Caption Generator Section -->
+            <section id="caption-generator" class="generator-section">
+                <div class="input-group">
+                    <label for="user_thoughts">Your Thoughts / Topic</label>
+                    <textarea id="user_thoughts" placeholder="What is this post about? Add your key messages here..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Media (Image/Video)</label>
+                    <div class="media-input-wrapper">
+                        <div class="upload-box" id="upload-box">
+                            <input type="file" id="media_file" accept="image/*,video/*" hidden>
+                            <span class="upload-icon">📁</span>
+                            <span class="upload-text">Upload Image or Video</span>
+                            <span class="file-name" id="file-name"></span>
+                        </div>
+                        <div class="div-or">OR</div>
+                        <input type="url" id="media_url" placeholder="Direct link to image/video (Drive, Cloud, etc.)">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label for="profile_link_caption">Your LinkedIn Profile Link</label>
+                        <input type="url" id="profile_link_caption" placeholder="https://linkedin.com/in/...">
+                    </div>
+                    <div class="input-group">
+                        <label for="model_caption">AI Model</label>
+                        <select id="model_caption">
+                            <option value="mistral-large-latest">Mistral Large (Smartest)</option>
+                            <option value="mistral-small-latest">Mistral Small (Fastest)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn generate-btn" id="generate-caption-btn">Generate Magic Caption</button>
+            </section>
+
+            <div class="loader" id="loader">
+                <div class="spinner"></div>
+                <p>Analyzing and generating...</p>
+            </div>
+
+            <div id="output-section">
+                <div class="output-header">
+                    <h2 id="output-title">Generated Magic</h2>
+                    <button class="copy-btn" id="copy-btn">Copy to Clipboard</button>
+                </div>
+                <div id="generated-output"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 LinkedIn Comment Magic. Powered by Mistral AI.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

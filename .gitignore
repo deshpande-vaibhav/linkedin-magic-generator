@@ -1,0 +1,18 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+env/
+venv/
+.venv/
+.env/
+
+# Uploads
+temp_uploads/
+
+# OS files
+.DS_Store
+Thumbs.db

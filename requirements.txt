@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+mistralai
+httpx
+beautifulsoup4
+python-dotenv
+pydantic
+python-multipart
+streamlit
