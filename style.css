@@ -317,8 +317,101 @@ footer {
     100% { transform: rotate(360deg); }
 }
 
+
 @media (max-width: 600px) {
     .row {
         grid-template-columns: 1fr;
     }
+}
+
+/* --- Streamlit Specific Overrides --- */
+
+/* Hide Streamlit elements */
+[data-testid="stHeader"], [data-testid="stToolbar"] { display: none !important; }
+
+/* Map .container to Streamlit block-container */
+.block-container {
+    max-width: 800px !important;
+    padding: 40px !important;
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    border-radius: 12px !important;
+    border: none !important;
+    box-shadow: var(--shadow) !important;
+    margin: 40px auto !important;
+}
+
+/* Fix Labels */
+label p {
+    color: rgba(248, 250, 252, 0.7) !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    margin-bottom: 4px !important;
+}
+
+/* Selectbox & Inputs Match */
+.stTextArea textarea, .stTextInput input, div[data-baseweb="select"] {
+    background: rgba(30, 41, 59, 0.8) !important;
+    color: var(--text-main) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+}
+
+div[data-baseweb="select"] > div {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Button Match */
+.stButton>button {
+    width: 100% !important;
+    background-color: var(--primary) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 10px !important;
+    font-weight: 700 !important;
+}
+
+.stButton>button:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+/* Tabs Match */
+.stTabs [data-baseweb="tab-list"] {
+    background: rgba(255, 255, 255, 0.03) !important;
+    padding: 4px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    gap: 8px !important;
+}
+.stTabs [data-baseweb="tab"] {
+    background-color: transparent !important;
+    border-radius: 6px !important;
+    color: var(--text-muted) !important;
+    font-weight: 600 !important;
+}
+.stTabs [aria-selected="true"] {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+div[data-baseweb="tab-highlight"] { display: none !important; }
+
+/* File Uploader Match */
+.stFileUploader section {
+    background-color: transparent !important;
+    border: 2px dashed rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+}
+
+/* Output Box Match */
+.output-box {
+    background: rgba(15, 23, 42, 0.9) !important;
+    padding: 25px !important;
+    border-radius: 12px !important;
+    border: none !important;
+    margin-top: 30px !important;
 }
