@@ -10,93 +10,135 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom Styling to match the local premium theme
+# Custom Styling to match the local premium theme exactly
 st.markdown("""
 <style>
-    /* Global Background */
-    .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    /* 1. Reset and Global Background */
+    #root, .stApp {
+        background: #0f172a !important;
+        background-attachment: fixed;
+    }
+    
+    [data-testid="stAppViewContainer"] {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
     }
 
-    /* Target the main container to look like the card */
+    /* Hide Streamlit Header & Toolbar */
+    [data-testid="stHeader"], [data-testid="stToolbar"] {
+        display: none !important;
+    }
+
+    /* 2. Main Content Card (The Container) */
     .block-container {
         max-width: 900px !important;
         padding: 50px !important;
-        margin-top: 50px !important;
-        margin-bottom: 50px !important;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-radius: 20px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
+        margin: 40px auto !important;
     }
 
-    /* Header Styling */
+    /* 3. Typography Fixes */
     h1 {
         color: #0a66c2 !important;
-        font-size: 2.5rem !important;
+        font-size: 2.2rem !important;
         font-weight: 700 !important;
-        text-align: center;
-        margin-bottom: 0px !important;
+        text-align: center !important;
+        margin-bottom: 5px !important;
     }
     
     .subtitle {
-        color: #94a3b8;
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 1rem;
+        color: #94a3b8 !important;
+        text-align: center !important;
+        margin-bottom: 30px !important;
+        font-size: 1rem !important;
     }
 
-    /* Tabs Styling - Button Style */
+    label p {
+        color: #f8fafc !important;
+        font-size: 0.95rem !important;
+        font-weight: 600 !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* 4. Custom Tabs (Button Toggle Look) */
+    .stTabs {
+        border-bottom: none !important;
+    }
     .stTabs [data-baseweb="tab-list"] {
         background: rgba(255, 255, 255, 0.03) !important;
         padding: 6px !important;
-        border-radius: 15px !important;
+        border-radius: 12px !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         gap: 15px !important;
         margin-bottom: 30px !important;
+        justify-content: center !important;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 50px !important;
+        height: 48px !important;
         background-color: transparent !important;
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         color: #94a3b8 !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         flex: 1 !important;
         border: none !important;
-        transition: all 0.4s ease !important;
+        padding: 0 20px !important;
+        transition: all 0.3s ease !important;
     }
     .stTabs [aria-selected="true"] {
         background-color: #0a66c2 !important;
         color: white !important;
         box-shadow: 0 4px 15px rgba(10, 102, 194, 0.3) !important;
     }
-    /* Hide the red underline */
     div[data-baseweb="tab-highlight"] {
-        background-color: transparent !important;
+        display: none !important; /* Remove red underline */
     }
 
-    /* Input Styling */
-    label p {
-        font-size: 0.95rem !important;
-        font-weight: 500 !important;
-        margin-bottom: 8px !important;
-        color: white !important;
-    }
+    /* 5. Input Fields (Aggressive Overrides) */
     .stTextArea textarea, .stTextInput input, .stSelectbox [data-baseweb="select"] {
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: white !important;
+        background: rgba(43, 49, 65, 0.5) !important; /* Matched to dark grey in screenshot */
+        color: #f8fafc !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 12px !important;
-        padding: 14px !important;
-    }
-    .stTextArea textarea:focus, .stTextInput input:focus {
-        border-color: #38bdf8 !important;
-        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1) !important;
+        border-radius: 10px !important;
+        padding: 12px 14px !important;
     }
 
-    /* Button Styling */
+    /* 6. File Uploader (Dashed Box) */
+    .stFileUploader section {
+        background-color: transparent !important;
+        border: 2px dashed rgba(255, 255, 255, 0.3) !important;
+        border-radius: 12px !important;
+        padding: 30px !important;
+        color: #94a3b8 !important;
+    }
+    .stFileUploader section div[data-testid="stMarkdownContainer"] p {
+        color: #94a3b8 !important;
+    }
+
+    /* 7. Divider (Manual OR) */
+    .divider-or {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin: 20px 0;
+        position: relative;
+    }
+    .divider-or::before, .divider-or::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 45%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .divider-or::before { left: 0; }
+    .divider-or::after { right: 0; }
+
+    /* 8. Action Button */
     .stButton>button {
         width: 100% !important;
         background-color: #0a66c2 !important;
@@ -108,28 +150,29 @@ st.markdown("""
         font-weight: 600 !important;
         margin-top: 20px !important;
         transition: all 0.3s ease !important;
+        text-transform: none !important;
     }
     .stButton>button:hover {
         background-color: #004182 !important;
         transform: translateY(-2px) !important;
     }
 
-    /* Footer */
-    .footer {
-        text-align: center;
-        margin-top: 30px;
-        font-size: 0.8rem;
-        color: #94a3b8;
-    }
-    
-    /* Output Box */
+    /* 9. Output Box */
     .output-box {
-        background: rgba(255, 255, 255, 0.03) !important;
+        background: rgba(25, 31, 44, 0.8) !important;
         padding: 30px !important;
         border-radius: 20px !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         margin-top: 40px !important;
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    footer { display: none !important; }
+    .footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 0.8rem;
+        color: #94a3b8;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -172,7 +215,10 @@ with tab2:
     
     st.markdown("### Media (Image/Video)")
     media_file = st.file_uploader("Upload Image or Video", type=["jpg", "jpeg", "png", "webp", "mp4"])
-    media_url = st.text_input("OR Direct link to image/video", placeholder="Direct link to image/video (Drive, Cloud, etc.)")
+    
+    st.markdown('<div class="divider-or">OR</div>', unsafe_allow_html=True)
+    
+    media_url = st.text_input("Direct link to image/video", placeholder="Direct link to image/video (Drive, Cloud, etc.)")
     
     col1, col2 = st.columns(2)
     with col1:
