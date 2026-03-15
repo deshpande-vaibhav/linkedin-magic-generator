@@ -36,7 +36,7 @@ st.markdown("""
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
         border-radius: 20px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important; /* Extremely subtle */
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
         margin: 40px auto !important;
     }
@@ -72,7 +72,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.03) !important;
         padding: 6px !important;
         border-radius: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border: none !important; /* Removed border */
         gap: 15px !important;
         margin-bottom: 30px !important;
         justify-content: center !important;
@@ -101,15 +101,21 @@ st.markdown("""
     .stTextArea textarea, .stTextInput input, .stSelectbox [data-baseweb="select"] {
         background: rgba(43, 49, 65, 0.5) !important; /* Matched to dark grey in screenshot */
         color: #f8fafc !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border: none !important; /* Removed white border */
         border-radius: 10px !important;
         padding: 12px 14px !important;
+    }
+    
+    /* Subtle hover/focus to indicate interactivity without hard lines */
+    .stTextArea textarea:focus, .stTextInput input:focus {
+        background: rgba(53, 59, 75, 0.6) !important;
+        box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.3) !important;
     }
 
     /* 6. File Uploader (Dashed Box) */
     .stFileUploader section {
         background-color: transparent !important;
-        border: 2px dashed rgba(255, 255, 255, 0.3) !important;
+        border: 2px dashed rgba(255, 255, 255, 0.15) !important; /* Softer dashed line */
         border-radius: 12px !important;
         padding: 30px !important;
         color: #94a3b8 !important;
@@ -133,7 +139,7 @@ st.markdown("""
         top: 50%;
         width: 45%;
         height: 1px;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05); /* Softer lines */
     }
     .divider-or::before { left: 0; }
     .divider-or::after { right: 0; }
@@ -162,7 +168,7 @@ st.markdown("""
         background: rgba(25, 31, 44, 0.8) !important;
         padding: 30px !important;
         border-radius: 20px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border: none !important; /* Removed white border */
         margin-top: 40px !important;
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3) !important;
     }
