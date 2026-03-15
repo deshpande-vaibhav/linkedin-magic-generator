@@ -13,35 +13,30 @@ st.set_page_config(
 # Custom Styling to match the local premium theme exactly
 st.markdown("""
 <style>
-    /* 1. Reset and Global Background */
+    /* 1. Global Reset */
     #root, .stApp {
         background: #0f172a !important;
         background-attachment: fixed;
     }
-    
     [data-testid="stAppViewContainer"] {
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
     }
-
-    /* Hide Streamlit Header, Toolbar, and Padding */
-    [data-testid="stHeader"], [data-testid="stToolbar"] {
-        display: none !important;
-    }
+    [data-testid="stHeader"], [data-testid="stToolbar"] { display: none !important; }
 
     /* 2. Main Content Card (The Container) */
     .block-container {
-        max-width: 850px !important;
+        max-width: 800px !important; /* Slightly tighter */
         padding: 40px !important;
-        background: rgba(43, 49, 65, 0.4) !important; /* Matched to dark grey-blue in local */
+        background: rgba(43, 49, 65, 0.4) !important;
         backdrop-filter: blur(25px) !important;
         -webkit-backdrop-filter: blur(25px) !important;
         border-radius: 12px !important;
         border: none !important;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
-        margin: 50px auto !important;
+        margin: 40px auto !important;
     }
 
-    /* 3. Title & Typography */
+    /* 3. Title & Softened Labels */
     h1 {
         color: #0a66c2 !important;
         font-size: 2rem !important;
@@ -49,44 +44,37 @@ st.markdown("""
         text-align: center !important;
         margin-bottom: 2px !important;
     }
-    
     .subtitle {
-        color: #94a3b8 !important;
+        color: rgba(255, 255, 255, 0.5) !important;
         text-align: center !important;
         margin-bottom: 25px !important;
-        font-size: 0.95rem !important;
-        opacity: 0.8;
-    }
-
-    label p {
-        color: #f8fafc !important;
         font-size: 0.9rem !important;
-        font-weight: 600 !important;
+    }
+    label p {
+        color: rgba(248, 250, 252, 0.7) !important; /* Softened labels */
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
         margin-bottom: 4px !important;
     }
 
-    /* 4. Custom Tabs (Button Toggle Look) */
-    .stTabs {
-        border-bottom: none !important;
-    }
+    /* 4. Custom Tabs (Perfect Buttons) */
+    .stTabs { border-bottom: none !important; }
     .stTabs [data-baseweb="tab-list"] {
         background: rgba(255, 255, 255, 0.03) !important;
         padding: 4px !important;
         border-radius: 8px !important;
         border: none !important;
-        gap: 10px !important;
+        gap: 8px !important;
         margin-bottom: 25px !important;
         justify-content: center !important;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 44px !important;
         background-color: transparent !important;
-        border-radius: 6px !important;
-        color: #94a3b8 !important;
-        font-weight: 700 !important;
-        flex: 1 !important;
         border: none !important;
-        padding: 0 15px !important;
+        border-radius: 6px !important;
+        color: rgba(148, 163, 184, 0.8) !important;
+        font-weight: 600 !important;
+        height: 42px !important;
         transition: all 0.2s ease !important;
     }
     .stTabs [aria-selected="true"] {
@@ -94,73 +82,67 @@ st.markdown("""
         color: white !important;
         box-shadow: none !important;
     }
-    div[data-baseweb="tab-highlight"] {
-        display: none !important;
-    }
+    div[data-baseweb="tab-highlight"] { display: none !important; }
 
-    /* 5. Input Fields (No Borders, Darker Background) */
-    .stTextArea textarea, .stTextInput input, .stSelectbox [data-baseweb="select"] {
-        background: rgba(30, 41, 59, 0.7) !important; /* Darker slate match */
+    /* 5. Input Fields & Selectboxes (Extreme Border Removal) */
+    .stTextArea textarea, .stTextInput input, div[data-baseweb="select"] {
+        background: rgba(30, 41, 59, 0.8) !important; /* Dark Slate */
         color: #f8fafc !important;
         border: none !important;
         border-radius: 8px !important;
-        padding: 10px 12px !important;
         box-shadow: none !important;
     }
+    
+    /* Extra targeting for Streamlit's nested Selectbox parts */
+    div[data-baseweb="select"] > div {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
     .stTextArea textarea:focus, .stTextInput input:focus {
-        background: rgba(40, 51, 69, 0.8) !important;
-        box-shadow: inset 0 0 0 1px rgba(10, 102, 194, 0.5) !important; /* Subtle blue focus */
+        background: rgba(40, 51, 69, 0.9) !important;
+        box-shadow: inset 0 0 0 1px rgba(10, 102, 194, 0.3) !important;
     }
 
-    /* 6. File Uploader (Surgical Matching) */
+    /* 6. File Uploader (Subtle Match) */
     .stFileUploader section {
         background-color: transparent !important;
-        border: 1px dashed rgba(255, 255, 255, 0.2) !important;
-        border-radius: 8px !important;
-        padding: 25px !important;
+        border: 1px dashed rgba(255, 255, 255, 0.15) !important;
+        padding: 20px !important;
     }
-    .stFileUploader section small { color: #94a3b8 !important; }
+    .stFileUploader section [data-testid="stMarkdownContainer"] p {
+        color: rgba(148, 163, 184, 0.7) !important;
+        font-size: 0.8rem !important;
+    }
 
-    /* 7. Divider */
+    /* 7. Divider & Action Button */
     .divider-or {
         text-align: center;
-        color: #94a3b8;
-        font-size: 0.75rem;
-        font-weight: 700;
-        margin: 15px 0;
+        color: rgba(148, 163, 184, 0.5);
+        font-size: 0.7rem;
+        margin: 12px 0;
         position: relative;
     }
     .divider-or::before, .divider-or::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        width: 44%;
-        height: 1px;
-        background: rgba(255, 255, 255, 0.1);
+        content: ""; position: absolute; top: 50%; width: 45%; height: 1px;
+        background: rgba(255, 255, 255, 0.05);
     }
-    .divider-or::before { left: 0; }
-    .divider-or::after { right: 0; }
+    .divider-or::before { left: 0; } .divider-or::after { right: 0; }
 
-    /* 8. Action Button (Wide, Solid Blue) */
     .stButton>button {
         width: 100% !important;
         background-color: #0a66c2 !important;
         color: white !important;
         border: none !important;
         border-radius: 6px !important;
-        padding: 12px !important;
-        font-size: 1rem !important;
+        padding: 10px !important;
         font-weight: 700 !important;
-        margin-top: 15px !important;
-        transition: background 0.2s ease !important;
+        margin-top: 10px !important;
     }
-    .stButton>button:hover {
-        background-color: #004182 !important;
-    }
-
-    /* 9. Output Box */
+    
     .output-box {
-        background: rgba(15, 23, 42, 0.8) !important;
+        background: rgba(15, 23, 42, 0.9) !important;
         padding: 25px !important;
         border-radius: 12px !important;
         border: none !important;
@@ -171,9 +153,8 @@ st.markdown("""
     .footer {
         text-align: center;
         margin-top: 30px;
-        font-size: 0.75rem;
-        color: #94a3b8;
-        opacity: 0.6;
+        font-size: 0.7rem;
+        color: rgba(148, 163, 184, 0.5);
     }
 </style>
 """, unsafe_allow_html=True)
