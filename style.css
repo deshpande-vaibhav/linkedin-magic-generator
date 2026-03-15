@@ -329,11 +329,17 @@ footer {
 /* Hide Streamlit elements */
 [data-testid="stHeader"], [data-testid="stToolbar"] { display: none !important; }
 
+/* Global Background Reset for Streamlit */
+#root, .stApp, [data-testid="stAppViewContainer"] {
+    background: var(--bg-gradient) !important;
+    background-attachment: fixed !important;
+}
+
 /* Map .container to Streamlit block-container */
 .block-container {
     max-width: 800px !important;
     padding: 40px !important;
-    background: var(--card-bg) !important;
+    background: rgba(43, 49, 65, 0.4) !important;
     backdrop-filter: blur(25px) !important;
     -webkit-backdrop-filter: blur(25px) !important;
     border-radius: 12px !important;
