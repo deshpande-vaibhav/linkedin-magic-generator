@@ -13,31 +13,102 @@ st.set_page_config(
 # Custom Styling to match the premium theme
 st.markdown("""
 <style>
+    /* Global App Background */
     .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        color: #f8fafc;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        color: #f8fafc !important;
     }
+
+    /* Force all labels to be readable */
+    label, .stMarkdown, p, span, .st-ae, .st-af, .st-ag, .st-ah, .st-ai, .st-aj, .st-ak {
+        color: #f8fafc !important;
+    }
+
+    /* Container Styling (Glassmorphism) */
+    .block-container {
+        padding-top: 2rem !important;
+        max-width: 800px !important;
+    }
+
+    /* Input Fields Styling */
+    .stTextArea textarea, .stTextInput input, .stSelectbox [data-baseweb="select"] {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #f8fafc !important;
+        border-radius: 12px !important;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Tabs Styling */
+    .stTabs [data-baseweb="tab-list"] {
+        background-color: transparent !important;
+        gap: 10px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 8px 8px 0 0 !important;
+        color: #94a3b8 !important;
+        padding: 10px 20px !important;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #38bdf8 !important;
+        border-bottom: 2px solid #38bdf8 !important;
+    }
+
+    /* Button Styling */
     .stButton>button {
         width: 100%;
-        background-color: #0a66c2;
-        color: white;
-        border-radius: 10px;
-        padding: 10px;
-        font-weight: 600;
-        border: none;
-        transition: all 0.3s;
+        background: linear-gradient(90deg, #0a66c2 0%, #0077b5 100%) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
+        font-weight: 600 !important;
+        border: none !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
     .stButton>button:hover {
-        background-color: #004182;
-        transform: translateY(-2px);
+        background: linear-gradient(90deg, #0077b5 0%, #0a66c2 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
     }
+
+    /* Output Box */
     .output-box {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 20px;
-        border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin-top: 20px;
-        white-space: pre-wrap;
+        background: rgba(255, 255, 255, 0.07) !important;
+        padding: 24px !important;
+        border-radius: 16px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        margin-top: 24px !important;
+        white-space: pre-wrap !important;
+        backdrop-filter: blur(12px) !important;
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+    }
+
+    /* File Uploader Fix */
+    .stFileUploader section {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px dashed rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+    }
+    .stFileUploader label {
+        color: #f8fafc !important;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #475569;
     }
 </style>
 """, unsafe_allow_html=True)
