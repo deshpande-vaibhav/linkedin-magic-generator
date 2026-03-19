@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 import shutil
 import os
-from ai_logic import generate_comment, generate_caption, analyze_media
+from .ai_logic import generate_comment, generate_caption, analyze_media
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="LinkedIn Magic Generator API")
