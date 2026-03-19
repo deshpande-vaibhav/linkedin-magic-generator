@@ -1,0 +1,99 @@
+from fastapi import FastAPI, HTTPException, Form, File, UploadFile
+from pydantic import BaseModel
+from typing import Optional
+import shutil
+import os
+from ai_logic import generate_comment, generate_caption, analyze_media
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(title="LinkedIn Magic Generator API")
+
+# Enable CORS (Vercel handles this in prod, but good for local)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/api/python")
+async def hello_world():
+    return {"message": "Hello from FastAPI on Vercel!"}
+
+class CommentRequest(BaseModel):
+    post_caption: str
+    post_link: Optional[str] = ""
+    profile_link: Optional[str] = ""
+    tone: str
+    model: Optional[str] = "mistral-large-latest"
+
+class CommentResponse(BaseModel):
+    comment: str
+
+class CaptionRequest(BaseModel):
+    thoughts: str
+    profile_link: Optional[str] = ""
+    image_video_desc: Optional[str] = ""
+    model: Optional[str] = "mistral-large-latest"
+
+class CaptionResponse(BaseModel):
+    caption: str
+
+@app.post("/api/generate", response_model=CommentResponse)
+async def handle_generate(request: CommentRequest):
+    if not request.post_caption:
+        raise HTTPException(status_code=400, detail="Post caption is required")
+    
+    comment = await generate_comment(
+        request.post_caption,
+        request.post_link,
+        request.profile_link,
+        request.tone,
+        request.model
+    )
+    
+    return CommentResponse(comment=comment)
+
+@app.post("/api/generate_caption", response_model=CaptionResponse)
+async def handle_generate_caption(
+    thoughts: str = Form(...),
+    profile_link: Optional[str] = Form(""),
+    media_url: Optional[str] = Form(""),
+    media_file: Optional[UploadFile] = File(None),
+    model: Optional[str] = Form("mistral-large-latest")
+):
+    if not thoughts:
+        raise HTTPException(status_code=400, detail="Thoughts are required for caption generation")
+    
+    analyzed_media_desc = ""
+    
+    # 1. Handle File Upload
+    if media_file and media_file.filename:
+        temp_dir = "/tmp"  # Use /tmp for Vercel functions
+        os.makedirs(temp_dir, exist_ok=True)
+        file_path = os.path.join(temp_dir, media_file.filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(media_file.file, buffer)
+        
+        # Analyze the file
+        try:
+            analyzed_media_desc = await analyze_media(file_path=file_path)
+        finally:
+            # Clean up
+            if os.path.exists(file_path):
+                os.remove(file_path)
+    
+    # 2. Handle Media URL (if no file was uploaded or as fallback)
+    elif media_url:
+        analyzed_media_desc = await analyze_media(media_url=media_url)
+
+    # 3. Generate Caption
+    caption = await generate_caption(
+        thoughts,
+        profile_link,
+        analyzed_media_desc or "",
+        model
+    )
+    
+    return CaptionResponse(caption=caption)
