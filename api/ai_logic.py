@@ -2,36 +2,28 @@ import os
 import httpx
 import base64
 from bs4 import BeautifulSoup
-from mistralai.client import Mistral # Correct import for SDK v2.0.2
+from mistralai.client import Mistral
 from dotenv import load_dotenv
 
 load_dotenv()
 
-def get_mistral_api_key():
-    # 1. Try environment variable
+def get_mistral_client():
     key = os.getenv("MISTRAL_API_KEY")
-    if key:
-        return key
+    if not key:
+        # Try Streamlit secrets as fallback
+        try:
+            import streamlit as st
+            if "MISTRAL_API_KEY" in st.secrets:
+                key = st.secrets["MISTRAL_API_KEY"]
+        except:
+            pass
     
-    # 2. Try Streamlit secrets (for deployment)
-    try:
-        import streamlit as st
-        if "MISTRAL_API_KEY" in st.secrets:
-            return st.secrets["MISTRAL_API_KEY"]
-    except:
-        pass
-    
-    return None
-
-MISTRAL_API_KEY = get_mistral_api_key()
-client = Mistral(api_key=MISTRAL_API_KEY)
+    if not key:
+        return None
+    return Mistral(api_key=key)
 
 async def scrape_linkedin_content(url: str) -> str:
-    """
-    Attempts to scrape content from a LinkedIn URL.
-    Since LinkedIn has strict anti-scraping, this is a best-effort approach.
-    In a real-world scenario, a dedicated scraping API or browser automation would be better.
-    """
+    """Best-effort LinkedIn scraping."""
     if not url or "linkedin.com" not in url:
         return ""
     
@@ -43,18 +35,20 @@ async def scrape_linkedin_content(url: str) -> str:
             response = await httpx_client.get(url, headers=headers, timeout=10.0)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.text, 'html.parser')
-                # Try to get meta description or specific tags
                 meta_desc = soup.find("meta", property="og:description")
                 if meta_desc:
                     return meta_desc.get("content", "")
-                return soup.get_text(separator=' ', strip=True)[:1000] # Limit content
+                return soup.get_text(separator=' ', strip=True)[:1000]
     except Exception as e:
         print(f"Error scraping {url}: {e}")
     
     return ""
 
 async def generate_comment(post_caption: str, post_link: str, profile_link: str, tone: str, model: str = "mistral-large-latest") -> str:
-    # 1. Gather context
+    client = get_mistral_client()
+    if not client:
+        return "Error: MISTRAL_API_KEY not found in environment variables."
+
     post_context = ""
     if post_link:
         post_context = await scrape_linkedin_content(post_link)
@@ -63,7 +57,6 @@ async def generate_comment(post_caption: str, post_link: str, profile_link: str,
     if profile_link:
         profile_context = await scrape_linkedin_content(profile_link)
     
-    # 2. Construct prompt
     system_prompt = (
         "You are an expert LinkedIn strategist and ghostwriter. Your goal is to generate a high-quality, "
         "natural-sounding LinkedIn comment based on a post and optional user profile context."
@@ -101,9 +94,8 @@ Comment:
         {"role": "user", "content": prompt}
     ]
     
-    # 3. Call Mistral API
     try:
-        chat_response = client.chat.complete(
+        chat_response = await client.chat.complete_async(
             model=model,
             messages=messages,
             temperature=0.7,
@@ -111,15 +103,19 @@ Comment:
         )
         return chat_response.choices[0].message.content.strip()
     except Exception as e:
+        if "401" in str(e):
+            return "Error: Invalid Mistral API Key. Please check your .env file."
         return f"Error generating comment: {str(e)}"
 
 async def generate_caption(thoughts: str, profile_link: str, image_video_desc: str = "", model: str = "mistral-large-latest") -> str:
-    # 1. Gather profile context
+    client = get_mistral_client()
+    if not client:
+        return "Error: MISTRAL_API_KEY not found in environment variables."
+
     profile_context = ""
     if profile_link:
         profile_context = await scrape_linkedin_content(profile_link)
     
-    # 2. Construct prompt for personality analysis and caption generation
     system_prompt = (
         "You are an expert LinkedIn content creator. Your goal is to write highly engaging LinkedIn captions "
         "that follow a specific structure: Hook, Story, and Conclusion/CTA."
@@ -154,38 +150,37 @@ Caption:
         {"role": "user", "content": prompt}
     ]
     
-    # 3. Call Mistral API
     try:
-        chat_response = client.chat.complete(
+        chat_response = await client.chat.complete_async(
             model=model,
             messages=messages,
-            temperature=0.8, # Slightly higher for creativity in captions
-            max_tokens=600  # Captions are longer than comments
+            temperature=0.8,
+            max_tokens=600
         )
         return chat_response.choices[0].message.content.strip()
     except Exception as e:
+        if "401" in str(e):
+            return "Error: Invalid Mistral API Key. Please check your .env file."
         return f"Error generating caption: {str(e)}"
 
 async def analyze_media(file_path: str = None, media_url: str = None) -> str:
     """Analyze an image or video using Mistral's vision capabilities."""
+    client = get_mistral_client()
+    if not client:
+        return "Error: MISTRAL_API_KEY not found."
+
     image_data_url = None
 
     try:
         if file_path:
-            # Handle local file
             with open(file_path, "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-                # Assuming image for now, as Pixtral handles images best
-                # Support common image formats
                 ext = os.path.splitext(file_path)[1].lower().replace(".", "")
                 if ext not in ["jpg", "jpeg", "png", "webp"]:
                     ext = "jpeg"
                 image_data_url = f"data:image/{ext};base64,{encoded_string}"
         
         elif media_url:
-            # Handle URL
-            # Note: For real-world use, we might want to download the image first
-            # to ensure it's in a format Pixtral likes or to handle complex URLs (Drive, etc.)
             image_data_url = media_url
 
         if not image_data_url:
@@ -195,13 +190,13 @@ async def analyze_media(file_path: str = None, media_url: str = None) -> str:
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": "Describe this image or video in detail, focusing on elements relevant for a professional LinkedIn post. If it's a video, describe the main themes or visual narrative."},
+                    {"type": "text", "text": "Describe this image or video in detail, focusing on elements relevant for a professional LinkedIn post."},
                     {"type": "image_url", "image_url": image_data_url}
                 ]
             }
         ]
 
-        response = client.chat.complete(
+        response = await client.chat.complete_async(
             model="pixtral-12b-2409",
             messages=messages,
             max_tokens=300
@@ -209,4 +204,6 @@ async def analyze_media(file_path: str = None, media_url: str = None) -> str:
         return response.choices[0].message.content.strip()
 
     except Exception as e:
+        if "401" in str(e):
+            return "Error: Invalid Mistral API Key."
         return f"Media analysis failed: {str(e)}"
