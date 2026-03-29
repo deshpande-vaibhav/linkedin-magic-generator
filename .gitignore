@@ -35,3 +35,15 @@ next-env.d.ts
 
 # legacy
 /legacy
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo

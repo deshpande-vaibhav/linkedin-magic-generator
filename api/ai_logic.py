@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from mistralai.client import Mistral
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 def get_mistral_client():
     key = os.getenv("MISTRAL_API_KEY")
@@ -20,6 +20,8 @@ def get_mistral_client():
     
     if not key:
         return None
+    
+    key = key.strip()
     return Mistral(api_key=key)
 
 async def scrape_linkedin_content(url: str) -> str:
